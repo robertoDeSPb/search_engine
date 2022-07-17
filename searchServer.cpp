@@ -35,7 +35,12 @@ std::vector<std::vector<RelativeIndex>> SearchServer::search(const std::vector<s
         std::vector<RelativeIndex> ranks;
         std::map<size_t, RelativeIndex> docsMap;
         float max = 0;
+        //
+        //сюда можно запихнуть thread_pool
+        //boost::asio::thread_pool pool;
+        
         do {    //идет проход по упорядоченному по возрастанию значения поля count вектору wordsCount
+            //boost::asio::post(pool, boost::bind([]{}));
             auto vec = _index.GetWordCount(wordsCount[i].first);
             for (int j = 0; j < vec.size(); ++j) {  //в одном проходе этого цикла добавляется count конкретного слова к рангу каждого документа
                 if (docsMap.find(vec[j].doc_id) == docsMap.end()) {// если этот документ еще не владеет каким-либо словом из всего запроса
@@ -55,6 +60,7 @@ std::vector<std::vector<RelativeIndex>> SearchServer::search(const std::vector<s
             }
             i++;
         } while (i < wordsCount.size());
+        pool.join();
         for (auto& elem:ranks) {
             if(max != 0) elem.rank /= max;
         }
