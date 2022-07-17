@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <fstream>
+#include <exception>
 #include <nlohmann/json.hpp>
 #include <sstream>
 #include "invertedIndex.h"
@@ -179,7 +180,7 @@ int main() {
                 }
 
 //смысл в том что где-то создается запрос, отправляется в копилку запросов, затем обработчик достает из копилки последний запрос и уже его обрабатывает?
-            } else {
+           } else {
                 throw std::exception("Config file is empty");
             }
         } else {
@@ -189,10 +190,3 @@ int main() {
         std::cerr << x.what();
     }
 }
-
-
-//создать флаг, чтобы при запуске программы было одно значение,
-// answers и requests обнулились, значение флага изменилось
-// и дальше эти файлы пополнялись коллекцией запросов.
-
-// сейчас answers обнуляется на каждом запросе, а requests не обнуляется вообще
