@@ -6,6 +6,7 @@
 #define SEARCH_ENGINE_SEARCHSERVER_H
 
 #include "invertedIndex.h"
+#include "boost/asio.hpp"
 
 struct RelativeIndex{
     size_t doc_id;
@@ -15,7 +16,6 @@ struct RelativeIndex{
     }
 };
 
-
 class SearchServer {
 public:
 /**
@@ -24,7 +24,7 @@ InvertedIndex,
 * чтобы SearchServer мог узнать частоту слов встречаемых в
 запросе
 */
-    SearchServer(InvertedIndex& idx) : _index(idx){};
+    SearchServer(InvertedIndex& idx, boost::asio::thread_pool& pl) : _index(idx), pool(pl){};
 /**
 * Метод обработки поисковых запросов
 * @param queries_input поисковые запросы взятые из файла
@@ -33,8 +33,12 @@ requests.json
 заданных запросов
 */
     std::vector<std::vector<RelativeIndex>> search(const std::vector<std::string>& queries_input);
+
+
 private:
     InvertedIndex _index;
+public:
+    boost::asio::thread_pool& pool;
 };
 
 #endif //SEARCH_ENGINE_SEARCHSERVER_H

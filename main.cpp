@@ -6,6 +6,7 @@
 #include <sstream>
 #include "invertedIndex.h"
 #include "searchServer.h"
+#include <chrono>
 
 
 using json = nlohmann::json;
@@ -136,19 +137,19 @@ int main() {
     //std::string path;
     std::ifstream file("config.json");
     file >> dict;
-    std::cout << dict["config"]["max_responses"] << std::endl;
-
 
     try {
         std::ifstream file1("config.json");
         if (file1.is_open()) {
             if (dict["config"] > 0) {
                 ConverterJSON conv;
+                //если здесь, то работает 1 раз
                 std::string name = dict["config"]["name"];
                 std::string version = dict["config"]["version"];
                 std::cout << "~~~~~" << name << version << "~~~~~" << std::endl;
+                boost::asio::thread_pool pl(4);
                 while(true) {
-
+                    //если пул здесь то все работает, но медленнее однопотока
                     std::string request;
                     std::cout << "Find:";
                     std::getline(std::cin, request);
@@ -160,19 +161,24 @@ int main() {
                         path = i;
                         std::ifstream doc(path);
                         std::string docText;
-                        while (!doc.eof()) {
-                            std::getline(doc, docText);
-                        }
+                        char nil = '\0';
+                        std::getline(doc, docText, nil);
                         doc.close();
                         files.push_back(docText);
                     }
                     InvertedIndex ind;
                     ind.UpdateDocumentBase(files);
-                    SearchServer srv(ind);
+                    SearchServer srv(ind,pl);
                     std::vector<std::string> requestsVec{request};
+                    //timer of searching
+                    auto begin = std::chrono::high_resolution_clock::now();
+
                     auto res = srv.search(requestsVec);
                     conv.putAnswers(res);
-                    int k = 0;
+
+                    auto end = std::chrono::high_resolution_clock::now();
+                    std::cout << std::endl << "thread_pool:" << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
+
                     std::cout << std::endl;
                     for (auto& x:res[res.size() - 1]) {
                         std::cout << x.doc_id << ": " << x.rank << std::endl;
@@ -180,7 +186,7 @@ int main() {
                 }
 
 //смысл в том что где-то создается запрос, отправляется в копилку запросов, затем обработчик достает из копилки последний запрос и уже его обрабатывает?
-           } else {
+            } else {
                 throw std::exception("Config file is empty");
             }
         } else {
