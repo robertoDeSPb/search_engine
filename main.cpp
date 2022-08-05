@@ -132,6 +132,7 @@ void foo() {
         throw err;
     }
 }
+
 int main() {
     json dict;
     //std::string path;
@@ -147,7 +148,6 @@ int main() {
                 std::string name = dict["config"]["name"];
                 std::string version = dict["config"]["version"];
                 std::cout << "~~~~~" << name << version << "~~~~~" << std::endl;
-                boost::asio::thread_pool pl(4);
                 while(true) {
                     //если пул здесь то все работает, но медленнее однопотока
                     std::string request;
@@ -163,21 +163,24 @@ int main() {
                         std::string docText;
                         char nil = '\0';
                         std::getline(doc, docText, nil);
-                        doc.close();
                         files.push_back(docText);
+                        doc.close();
                     }
                     InvertedIndex ind;
+                    /*//timer of searching
+                    auto begin = std::chrono::high_resolution_clock::now();*/
+
                     ind.UpdateDocumentBase(files);
-                    SearchServer srv(ind,pl);
+
+                    SearchServer srv(ind);
                     std::vector<std::string> requestsVec{request};
-                    //timer of searching
-                    auto begin = std::chrono::high_resolution_clock::now();
 
                     auto res = srv.search(requestsVec);
                     conv.putAnswers(res);
 
-                    auto end = std::chrono::high_resolution_clock::now();
+                    /*auto end = std::chrono::high_resolution_clock::now();
                     std::cout << std::endl << "thread_pool:" << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
+                    //end of timer*/
 
                     std::cout << std::endl;
                     for (auto& x:res[res.size() - 1]) {

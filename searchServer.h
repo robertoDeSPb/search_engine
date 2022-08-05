@@ -24,7 +24,7 @@ InvertedIndex,
 * чтобы SearchServer мог узнать частоту слов встречаемых в
 запросе
 */
-    SearchServer(InvertedIndex& idx, boost::asio::thread_pool& pl) : _index(idx), pool(pl){};
+    SearchServer(InvertedIndex& idx) : _index(idx){};
 /**
 * Метод обработки поисковых запросов
 * @param queries_input поисковые запросы взятые из файла
@@ -37,8 +37,6 @@ requests.json
 
 private:
     InvertedIndex _index;
-public:
-    boost::asio::thread_pool& pool;
 };
 
 #endif //SEARCH_ENGINE_SEARCHSERVER_H
