@@ -18,7 +18,7 @@ void InvertedIndex::UpdateDocumentBase(std::vector<std::string> input_docs) {
     boost::asio::thread_pool pool(4);
     std::mutex mtx;
     for (int i = 0; i < input_docs.size(); ++i) {
-        //auto doc = input_docs[i];
+
         boost::asio::post(pool, [&,this,i] {
             std::stringstream ss(std::move(input_docs[i]));
             std::string word;

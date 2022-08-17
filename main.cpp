@@ -157,14 +157,20 @@ int main() {
                     //добавление текста из файлов в массив для дальнейшей индексации
                     std::vector<std::string> files;
                     std::string path;
+                    int j = 1;
                     for (auto &i: dict["files"]) {
                         path = i;
                         std::ifstream doc(path);
-                        std::string docText;
-                        char nil = '\0';
-                        std::getline(doc, docText, nil);
-                        files.push_back(docText);
-                        doc.close();
+                        if (doc.is_open()) {
+                            std::string docText;
+                            char nil = '\0';
+                            std::getline(doc, docText, nil);
+                            files.push_back(docText);
+                            doc.close();
+                            j++;
+                        } else {
+                            throw std::exception("current file is missing");
+                        }
                     }
                     InvertedIndex ind;
                     /*//timer of searching
@@ -177,10 +183,6 @@ int main() {
 
                     auto res = srv.search(requestsVec);
                     conv.putAnswers(res);
-
-                    /*auto end = std::chrono::high_resolution_clock::now();
-                    std::cout << std::endl << "thread_pool:" << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
-                    //end of timer*/
 
                     std::cout << std::endl;
                     for (auto& x:res[res.size() - 1]) {

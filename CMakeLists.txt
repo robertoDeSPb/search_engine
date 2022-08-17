@@ -13,9 +13,15 @@ include_directories(${Boost_INCLUDE_DIR})
 link_directories(${Boost_LIBRARY_DIR})
 
 
-set(JSON_BuildTests OFF CACHE INTERNAL "")
 
-add_subdirectory(nlohmann_json)
+include(FetchContent)
+
+FetchContent_Declare(json URL https://github.com/nlohmann/json/releases/download/v3.11.2/json.tar.xz)
+FetchContent_MakeAvailable(json)
+
+set(JSON_BuildTests OFF)
+
+
 
 add_subdirectory(Google_tests)
 add_executable(search_engine main.cpp Google_tests/invertedIndexTest.cpp invertedIndex.cpp invertedIndex.h searchServer.cpp searchServer.h Google_tests/searchServerTests.cpp)
