@@ -2,5 +2,22 @@
 
 THIS IS MY SEARCH_ENGINE PROJECT!
 
-FOR BE SURE THAT IT WORKS, YOU NEED PRE - INSTALLED BOOST LIBRARY WITH MSVC COMPILLER. THAN YOU SHOULD SET THE ADDRESS TO Boost_INCLUDE_DIR AND Boost_LIBRARY_DIR
-IN CMakeLists.txt, WHICH IS IN THE search_engine FOLDER.
+
+For be sure that it works, you need pre-installed boost library with MSVC compiller.
+
+Than you should make a couple of edits (if your path to the boost not match mine) in CMakeLists.txt in search_engine folder:
+
+set(Boost_INCLUDE_DIR "C:\\boost_1_79_0")
+set(Boost_LIBRARY_DIR "C:\\boost_1_79_0\\stage\\lib")
+
+
+If you want to add new file for future ranking, add your .txt file to test_files folder. File should have a name like file001.txt. Then add path to this file in config.json in cmake-build-debug folder, like this:
+
+"files": [
+    "../test_files/file001.txt",
+    "../test_files/file002.txt",
+    "../test_files/file003.txt",
+    "../test_files/file004.txt"
+  ]
+  
+  
