@@ -5,7 +5,7 @@ THIS IS MY SEARCH_ENGINE PROJECT!
 
 For be sure that it works, you need pre-installed boost library with MSVC compiller.
 
-Than you should make a couple of edits (if your path to the boost not match mine) in CMakeLists.txt in search_engine folder:
+Than you should make a couple of edits (if your path to the boost not match mine) in CMakeLists.txt in search_engine folder, like this:
 
 set(Boost_INCLUDE_DIR "C:\\boost_1_79_0")
 set(Boost_LIBRARY_DIR "C:\\boost_1_79_0\\stage\\lib")
