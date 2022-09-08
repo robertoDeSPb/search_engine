@@ -44,7 +44,7 @@ public:
 
 std::vector<std::string> ConverterJSON::GetTextDocuments() {
     json dict;
-    std::ifstream file("config.json");
+    std::ifstream file("..\\json_files\\config.json");
     file >> dict;
     std::vector<std::string> files;
     for (auto& i:dict["files"]) {
@@ -56,7 +56,7 @@ std::vector<std::string> ConverterJSON::GetTextDocuments() {
 
 int ConverterJSON::GetResponsesLimit() {
     json dict;
-    std::ifstream file("config.json");
+    std::ifstream file("..\\json_files\\config.json");
     file >> dict;
     int lmt = dict["config"]["max_responses"];
     file.close();
@@ -64,13 +64,13 @@ int ConverterJSON::GetResponsesLimit() {
 }
 
 void ConverterJSON::putRequest(std::string request) {
-    std::ifstream file("requests.json");
+    std::ifstream file("..\\json_files\\requests.json");
     json dict;
     if (!start) {
         file >> dict;
     }
     file.close();
-    std::ofstream file1("requests.json");
+    std::ofstream file1("..\\json_files\\requests.json");
     dict["requests"].push_back(request);
     file1 << dict;
     file1.close();
@@ -78,7 +78,7 @@ void ConverterJSON::putRequest(std::string request) {
 
 std::vector<std::string> ConverterJSON::GetRequests() {
     json dict;
-    std::ifstream file("requests.json");
+    std::ifstream file("..\\json_files\\requests.json");
     file >> dict;
     std::vector<std::string> requests;
     for (auto& i:dict["requests"]) {
@@ -89,7 +89,7 @@ std::vector<std::string> ConverterJSON::GetRequests() {
 }
 
 void ConverterJSON::putAnswers(std::vector<std::vector<RelativeIndex>> answers) {
-    std::ifstream file("answers.json");
+    std::ifstream file("..\\json_files\\answers.json");
     json dict;
     if (!start) {
         file >> dict;
@@ -113,7 +113,7 @@ void ConverterJSON::putAnswers(std::vector<std::vector<RelativeIndex>> answers) 
             }
         }
     }
-    std::ofstream file1("answers.json");
+    std::ofstream file1("..\\json_files\\answers.json");
     file1 << dict;
     file.close();
     start = false;
@@ -123,7 +123,7 @@ void ConverterJSON::putAnswers(std::vector<std::vector<RelativeIndex>> answers) 
 void foo() {
     json dict;
     std::string path;
-    std::ifstream file("config.json");
+    std::ifstream file("..\\json_files\\config.json");
     file >> dict;
     std::exception err;
     if (dict["config"]["max_responses"] != nullptr) {
@@ -136,11 +136,11 @@ void foo() {
 int main() {
     json dict;
     //std::string path;
-    std::ifstream file("config.json");
+    std::ifstream file("..\\json_files\\config.json");
     file >> dict;
 
     try {
-        std::ifstream file1("config.json");
+        std::ifstream file1("..\\json_files\\config.json");
         if (file1.is_open()) {
             if (dict["config"] > 0) {
                 ConverterJSON conv;

@@ -22,10 +22,10 @@ FetchContent_MakeAvailable(json)
 set(JSON_BuildTests OFF)
 
 
-
+enable_testing()
 add_subdirectory(Google_tests)
-add_executable(search_engine main.cpp Google_tests/invertedIndexTest.cpp invertedIndex.cpp invertedIndex.h searchServer.cpp searchServer.h Google_tests/searchServerTests.cpp)
+
+add_executable(search_engine main.cpp invertedIndex.cpp invertedIndex.h searchServer.cpp searchServer.h)
 
 
-target_link_libraries(search_engine PRIVATE gtest nlohmann_json::nlohmann_json ${Boost_LIBRARIES})
-
+target_link_libraries(search_engine PRIVATE gtest_main nlohmann_json::nlohmann_json ${Boost_LIBRARIES})

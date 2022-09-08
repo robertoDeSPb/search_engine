@@ -12,6 +12,10 @@
 #include "boost/asio.hpp"
 #include <boost/algorithm/string/case_conv.hpp>
 
+bool entriesSort(Entry a, Entry b) {
+    return a.doc_id < b.doc_id;
+}
+
 void InvertedIndex::UpdateDocumentBase(std::vector<std::string> input_docs) {
     //timer of searching
     auto begin = std::chrono::high_resolution_clock::now();
@@ -63,6 +67,7 @@ void InvertedIndex::UpdateDocumentBase(std::vector<std::string> input_docs) {
 std::vector<Entry> InvertedIndex::GetWordCount(const std::string &word) {
     std::vector<Entry> vec{};
     if (freq_dictionary.find(word) != freq_dictionary.end()) {
+        std::sort(freq_dictionary[word].begin(), freq_dictionary[word].end(), entriesSort);
         return freq_dictionary[word];
     }
     Entry emptyEntry{};
